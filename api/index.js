@@ -119,7 +119,7 @@ app.post("/api/users/create", async (req, res) => {
 app.get("/api/users/signout", async (req, res) => {
     try {
         await signOut(auth);
-        res.status(200).json({ message: "User logged out successfully!" });
+        res.status(200).json({ message: "User signed out successfully!" });
     } catch (error) {
         res.status(500).json({ error: "Failed to sign out.", details: error.message });
     }
@@ -131,7 +131,7 @@ app.get("/api/users/signout", async (req, res) => {
 app.get("/api/users/check", async (req, res) => {
     try {
         const userid = await auth.currentUser;
-        res.status(200).json({ message: "User exist", userid: userid });
+        res.status(200).json({ message: "User exist", userid: auth.currentUser.uid });
     } catch (error) {
         res.status(500).json({ error: "No User exist", details: error.message });
     }
