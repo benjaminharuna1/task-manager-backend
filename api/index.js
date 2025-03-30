@@ -116,22 +116,27 @@ app.post("/api/users/create", async (req, res) => {
 
 
 // SIGNOUT USER untested
-app.post("/api/users/signout/", async (req, res) => {
-    // const name = req.body.name;
-    const email = req.body.semail;
-    const password = req.body.spassword;
-        console.log(req.body);
-        const response = createUserWithEmailAndPassword(auth, email, password) 
-        .then((cred) => {
-            console.log('User Created: ', cred.user);
-            res.status(201).json({ message: "User Created Successfully!"});  
-        })
-        .catch((error) => {
-            console.log('Error Creating user: ', error);
-            res.status(500).json({ error: "Failed to create user. ", details: error.message });
-        })
-
+app.get("/api/users/signout", async (req, res) => {
+    try {
+        await signOut(auth);
+        res.status(200).json({ message: "User logged out successfully!" });
+    } catch (error) {
+        res.status(500).json({ error: "Failed to sign out.", details: error.message });
+    }
 });
+
+
+
+// CHECK USER SIGNIN STATUS
+app.get("/api/users/check", async (req, res) => {
+    try {
+        const userid = await auth.currentUser;
+        res.status(200).json({ message: "User exist", userid: userid });
+    } catch (error) {
+        res.status(500).json({ error: "No User exist", details: error.message });
+    }
+});
+
 
 
 // CHAATBOT API
