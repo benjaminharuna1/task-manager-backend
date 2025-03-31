@@ -166,7 +166,7 @@ app.get("/api/users/signout", async (req, res) => {
 app.get("/api/users/check", async (req, res) => {
     try {
         const userid = await auth.currentUser;
-        res.status(200).json({ message: "User exist", userid: auth.currentUser.uid });
+        res.status(200).json({ message: "User exist", userid: auth.currentUser.uid, useremail: auth.currentUser.email, });
     } catch (error) {
         res.status(500).json({ error: "No User exist", details: error.message });
     }
