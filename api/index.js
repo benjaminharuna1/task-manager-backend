@@ -1,8 +1,8 @@
 import express from "express";
 import cors from "cors";
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc } from "firebase/firestore";
-import { getAuth, createUserWithEmailAndPassword, signOut } from 'firebase/auth' //Authentication with firebase
+import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { getAuth, createUserWithEmailAndPassword, signOut, signInWithEmailAndPassword } from 'firebase/auth' //Authentication with firebase
 import dotenv from "dotenv";
 import { GoogleGenAI } from "@google/genai";
 
@@ -88,6 +88,27 @@ app.post("/api/tasks", async (req, res) => {
   });
 
 
+  
+
+//   UPDATE STATUS
+// Update Task Status
+app.put("/api/tasks/:id", async (req, res) => {
+    try {
+    //   console.log("Received request body:", req.body); for testing
+    const taskId = req.params.id; // Extract task ID from URL
+      const docRef = await doc(db, 'tasks', taskId);
+      updateDoc(docRef, {
+        status: req.body.status
+      });
+      res.status(201).json({ id: docRef.id });
+    } catch (error) {
+      console.error("Error adding task:", error);
+      res.status(500).json({ error: "Failed to add task", details: error.message });
+    }
+  });
+
+
+
 //   UPDATE DOCUMENTS
 
 
@@ -97,7 +118,7 @@ app.post("/api/users/create", async (req, res) => {
     const email = req.body.semail;
     const password = req.body.spassword;
         console.log(req.body);
-        const response = createUserWithEmailAndPassword(auth, email, password) 
+        const response = await createUserWithEmailAndPassword(auth, email, password) 
         .then((cred) => {
             console.log('User Created: ', cred.user);
             res.status(201).json({ message: "User Created Successfully!"});  
@@ -110,12 +131,26 @@ app.post("/api/users/create", async (req, res) => {
 });
 
 
-// FIREBASE AUTHENTICATION - SIGNIN USER
+// FIREBASE AUTHENTICATION - SIGNIN USER 
+app.post("/api/users/signin", async (req, res) => {
+    try { 
+        const email = req.body.email;
+        const password = req.body.password;
+        console.log(req.body);
+        const response = await signInWithEmailAndPassword(auth, email, password)
+        .then((cred) => {
+            console.log('User Signed In: ', cred.user);
+            res.status(201).json({ message: "User Signed In Successfully!"});  
+        })
+    } catch(error) { 
+            console.log('Error Signging in user: ', error);
+            res.status(500).json({ error: "Failed to sign in user. ", details: error.message });
+        } 
+});
 
 
 
-
-// SIGNOUT USER untested
+// SIGNOUT USER 
 app.get("/api/users/signout", async (req, res) => {
     try {
         await signOut(auth);
