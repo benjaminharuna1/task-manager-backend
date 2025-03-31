@@ -10,11 +10,7 @@ dotenv.config()
 
 const app = express();
 app.use(express.json());
-app.use(cors({
-    origin: 'http://localhost:8100',  // Allow Ionic app
-    methods: 'GET,POST,PUT,DELETE',
-    allowedHeaders: 'Content-Type,Authorization'
-}));
+app.use(cors());
 
 // Firebase Config
 const firebaseConfig = {
