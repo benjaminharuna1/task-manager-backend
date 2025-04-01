@@ -1,4 +1,4 @@
-# Smart Task Management App - Frontend
+# Smart Task Management App - Backend
 
 ## Overview
 The **Smart Task Management App** is a feature-rich task management application built using **Ionic React**. This frontend connects to a backend powered by Firebase Functions and MongoDB, providing a seamless and interactive task management experience.
